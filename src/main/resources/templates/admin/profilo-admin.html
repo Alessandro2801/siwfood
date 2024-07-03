@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Profilo Amministratore</title>
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+	<style>
+		/* Stile per l'immagine nell'header */
+		.header-image {
+			max-width: 100%;
+			/* Adatta l'immagine al contenitore */
+			height: auto;
+			/* Mantiene le proporzioni dell'immagine */
+		}
+
+		/* Stile personalizzato per ridurre l'altezza dell'header */
+		.custom-jumbotron {
+			padding: 1rem 1rem;
+			margin-bottom: 0;
+			background-image: url('/images/immagine8.jpg');
+			/* Sostituisci con il percorso dell'immagine desiderata */
+			background-size: cover;
+			/* Copre l'intera area dell'header */
+			background-position: center;
+			/* Centra l'immagine rispetto all'header */
+			background-repeat: no-repeat;
+			/* Assicura che l'immagine non venga ripetuta */
+		}
+
+		/* Stile per le card delle ricette */
+		.recipe-card {
+			height: 100%;
+			/* Altezza della card */
+			display: flex;
+			flex-direction: column;
+		}
+
+		.recipe-card .card-body {
+			flex: 1;
+			/* La parte del corpo della card occupa lo spazio rimanente */
+		}
+
+		/* Stile personalizzato per il pulsante "Aggiungi Amministratore" */
+		.custom-button {
+			background-color: white;
+			border: 1px solid #007bff;
+			color: #007bff;
+			transition: background-color 0.3s ease, color 0.3s ease;
+		}
+
+		.custom-button:hover {
+			background-color: #007bff;
+			color: white;
+		}
+	</style>
+</head>
+
+<body>
+	<!-- Navbar -->
+	<nav class="navbar navbar-expand-lg navbar-light bg-primary">
+		<div class="container-fluid">
+			<span class="navbar-brand d-flex align-items-center">
+				<img src="/images/immagine4.png" alt="Logo" width='40' height="40" style="margin-right: 20px;">
+				<span style="margin-left: -5px;">Siw-Food</span>
+			</span>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+				aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarNav">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item active">
+						<a class="nav-link" href="/admin/index">Home <span class="sr-only">(current)</span></a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="/admin/ricetta">Ricette</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="/admin/cuoco">Cuochi</a>
+					</li>
+				</ul>
+				<ul class="navbar-nav ms-auto">
+					<li class="nav-item">
+						<a class="nav-link" href="/admin/profile"> Amministratore: [[${utente.nome}]] [[${utente.cognome}]]</a>
+					</li>
+					<li class="nav-item">
+						<form id="logout-form" action="/logout" method="post" style="display: inline;">
+							<button type="submit" class="btn btn-light">Logout</button>
+						</form>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<!-- Header con immagine -->
+	<header class="jumbotron text-center custom-jumbotron">
+		<img src="/images/immagine1.png" alt="Siw-Food Logo" class="header-image" style="width: 200px; height: 200px;">
+		<h1 class="display-4">Benvenuti su Siw-Food</h1>
+		<p class="lead">Scopri i nostri cuochi e le loro ricette deliziose.</p>
+	</header>
+
+	<div class="container mt-4">
+		<div class="text-center mb-4">
+			<img src="/images/CEO.jpg" class="img-fluid" alt="Logo" width="20%">
+		</div>
+		<!-- Bottone per la gestione del'amministratore' -->
+		<div class="d-flex justify-content-between mb-3">
+			<a th:href="@{/admin/modify}" class="btn btn-primary">Modifica Dati</a>
+			<a th:href="@{/admin/register}" class="btn btn-outline-light custom-button">Aggiungi Amministratore</a>
+		</div>
+		<!-- Visualizzazione dati utente -->
+		<div th:if="${utente}">
+			<div class="card">
+				<div class="card-header">
+					<h1 th:text="${utente.nome + ' ' + utente.cognome}">Nome Utente</h1>
+				</div>
+				<div class="card-body">
+					<table class="table table-striped">
+						<tbody>
+							<tr>
+								<th scope="row">Username</th>
+								<td th:text="${credenziali.username}">Username</td>
+							</tr>
+							<tr>
+								<th scope="row">Nome</th>
+								<td th:text="${utente.nome}">Nome</td>
+							</tr>
+							<tr>
+								<th scope="row">Cognome</th>
+								<td th:text="${utente.cognome}">Cognome</td>
+							</tr>
+							<tr>
+								<th scope="row">Data di nascita</th>
+								<td th:text="${utente.dataNascita}">Data di nascita</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+
+		<div th:unless="${utente}" class="alert alert-danger">
+			Non esiste
+		</div>
+	</div>
+
+	<!-- Footer -->
+	<footer class="bg-light text-center text-lg-start mt-5">
+		<div class="container p-4">
+			<p class="text-center">&copy; 2024 Siw-Food. Created by Alessandro Cavina.</p>
+		</div>
+	</footer>
+</body>
+
+</html>

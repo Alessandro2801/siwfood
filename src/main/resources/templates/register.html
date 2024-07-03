@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrazione - Siw-Food</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header text-center">
+                        <h3>Registrazione</h3>
+                    </div>
+                    <div class="card-body">
+                        <!-- Aggiunta di enctype="multipart/form-data" per il caricamento di file -->
+                        <form method="post" action="/register" enctype="multipart/form-data">
+                            <div class="form-group">
+                                <label for="username">Username</label>
+                                <input type="text" class="form-control" id="username" name="username" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Password</label>
+                                <input type="password" class="form-control" id="password" name="password" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="nome">Nome</label>
+                                <input type="text" class="form-control" id="nome" name="nome" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="cognome">Cognome</label>
+                                <input type="text" class="form-control" id="cognome" name="cognome" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="dataNascita">Data di nascita</label>
+                                <input type="date" class="form-control" id="dataNascita" name="dataNascita" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="fileImmagine">Immagine:</label>
+                                <input type="file" id="fileImmagine" name="fileImmagine" class="form-control-file"
+                                    accept="image/*">
+                                <!-- Gestione dell'errore relativo all'upload dell'immagine -->
+                                <div th:if="${fileImmagineError != null}" class="text-danger"
+                                    th:text="${fileImmagineError}"></div>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">Registrati</button>
+                            <div class="text-center mt-3 text-danger">
+                                <span th:if="${error}">[[${error}]]</span>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

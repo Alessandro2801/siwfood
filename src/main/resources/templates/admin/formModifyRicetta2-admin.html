@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Modifica Ricetta</title>
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+	<style>
+		/* Stile per l'immagine nell'header */
+		.header-image {
+			max-width: 100%;
+			/* Adatta l'immagine al contenitore */
+			height: auto;
+			/* Mantiene le proporzioni dell'immagine */
+		}
+
+		/* Stile personalizzato per ridurre l'altezza dell'header */
+		.custom-jumbotron {
+			padding: 1rem 1rem;
+			margin-bottom: 0;
+			background-image: url('/images/immagine8.jpg');
+			/* Sostituisci con il percorso dell'immagine desiderata */
+			background-size: cover;
+			/* Copre l'intera area dell'header */
+			background-position: center;
+			/* Centra l'immagine rispetto all'header */
+			background-repeat: no-repeat;
+			/* Assicura che l'immagine non venga ripetuta */
+		}
+	</style>
+</head>
+
+<body>
+	<!-- Navbar -->
+	<nav class="navbar navbar-expand-lg navbar-light bg-primary">
+		<div class="container-fluid">
+			<span class="navbar-brand d-flex align-items-center">
+				<img src="/images/immagine4.png" alt="Logo" width='40' height="40" style="margin-right: 20px;">
+				<span style="margin-left: -5px;">Siw-Food</span>
+			</span>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+				aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarNav">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item active">
+						<a class="nav-link" href="/admin/index">Home <span class="sr-only">(current)</span></a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="/admin/ricetta">Ricette</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="/admin/cuoco">Cuochi</a>
+					</li>
+				</ul>
+				<ul class="navbar-nav ms-auto">
+					<li class="nav-item">
+						<a class="nav-link" href="#"> Amministratore: [[${utente.nome}]] [[${utente.cognome}]]</a>
+					</li>
+					<li class="nav-item">
+						<form id="logout-form" action="/logout" method="post" style="display: inline;">
+							<button type="submit" class="btn btn-light">Logout</button>
+						</form>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<!-- Header con immagine -->
+	<header class="jumbotron text-center custom-jumbotron">
+		<img src="/images/immagine1.png" alt="Siw-Food Logo" class="header-image" style="width: 200px; height: 200px;">
+		<h1 class="display-4">Benvenuti su Siw-Food</h1>
+		<p class="lead">Scopri i nostri cuochi e le loro ricette deliziose.</p>
+	</header>
+
+	<div class="container mt-4">
+		<div class="text-center mb-4">
+			<h2>Modifica Ricetta</h2>
+		</div>
+
+		<form th:action="@{/admin/ricetta/{id}/modify2(id=${ricetta.id})}" th:object="${ricetta}" method="post">
+			<div class="form-group">
+				<label>Nome Attuale</label>
+				<input type="text" class="form-control" id="nomeAttuale" th:value="${ricetta.nome}" readonly>
+				<label for="nome">Nuovo Nome</label>
+				<input type="text" class="form-control" id="nome" name="nome" placeholder="Nuovo nome">
+				<small class="form-text text-danger" th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}"></small>
+			</div>
+			<div class="form-group">
+				<label>Descrizione Attuale</label>
+				<input type="text" class="form-control" id="descrizioneAttuale" th:value="${ricetta.descrizione}"
+					readonly>
+				<label for="cognome">Nuova Descrizione</label>
+				<input type="text" class="form-control" id="descrizione" name="descrizione"
+					placeholder="Nuova descrizione">
+				<small class="form-text text-danger" th:if="${#fields.hasErrors('descrizione')}"
+					th:errors="*{descrizione}"></small>
+			</div>
+
+			<!-- Tabella degli Ingredienti -->
+			<div class="form-group">
+				<div class="d-flex justify-content-between align-items-center">
+					<label>Ingredienti</label>
+					<button type="button" class="btn btn-sm btn-primary" onclick="addIngredient()">Aggiungi
+						Ingrediente</button>
+				</div>
+				<table class="table table-bordered mt-2" id="ingredientiTable">
+					<thead>
+						<tr>
+							<th>Nome</th>
+							<th>Quantità</th>
+							<th>Azioni</th>
+						</tr>
+					</thead>
+					<tbody id="ingredientiBody">
+						<!-- Itera sugli ingredienti e crea una riga per ciascuno -->
+						<tr th:each="ingrediente, iterStat : ${ricetta.ingredienti}">
+							<td>
+								<input type="hidden" th:field="*{ingredienti[__${iterStat.index}__].id}"
+									th:value="${ingrediente.id}">
+								<input type="text" class="form-control"
+									th:field="*{ingredienti[__${iterStat.index}__].nome}"
+									placeholder="Nome Ingrediente">
+							</td>
+							<td>
+								<input type="text" class="form-control"
+									th:field="*{ingredienti[__${iterStat.index}__].quantita}" placeholder="Quantità">
+							</td>
+							<td>
+								<input type="hidden" th:field="*{ingredienti[__${iterStat.index}__].toRemove}"
+									value="false">
+								<button type="button" class="btn btn-sm btn-danger"
+									onclick="removeIngredient(this)">Elimina</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<button type="submit" class="btn btn-primary">Salva modifiche</button>
+		</form>
+	</div>
+
+	<!-- Footer -->
+	<footer class="bg-light text-center text-lg-start mt-5">
+		<div class="container p-4">
+			<p class="text-center">&copy; 2024 Siw-Food. Created by Alessandro Cavina.</p>
+		</div>
+	</footer>
+
+	<script>
+		function addIngredient() {
+			const tbody = document.getElementById('ingredientiBody');
+			const index = tbody.children.length;
+			const tr = document.createElement('tr');
+			tr.innerHTML = `
+	                <td>
+	                    <input type="hidden" name="ingredienti[${index}].id" value="">
+	                    <input type="text" name="ingredienti[${index}].nome" class="form-control" placeholder="Nome Ingrediente" required/>
+	                </td>
+	                <td>
+	                    <input type="text" name="ingredienti[${index}].quantita" class="form-control" placeholder="Quantità" required/>
+	                </td>
+	                <td>
+	                    <input type="hidden" name="ingredienti[${index}].toRemove" value="false">
+	                    <button type="button" class="btn btn-sm btn-danger" onclick="removeIngredient(this)">Elimina</button>
+	                </td>
+	            `;
+			tbody.appendChild(tr);
+		}
+
+		function removeIngredient(button) {
+			const row = button.closest('tr');
+			row.querySelector('input[name$=".toRemove"]').value = "true";
+			row.style.display = 'none';
+		}
+	</script>
+
+</body>
+
+</html>
